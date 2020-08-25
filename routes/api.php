@@ -14,6 +14,13 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    return $request->user();
-});
+//Route::middleware('auth:api')->get('/user', function (Request $request) {
+//    return $request->user();
+//});
+
+Route::get('/users', 'Api\\UserController@index');
+Route::get('/user/{id}', 'Api\\UserController@show');
+
+Route::get('/notes', 'Api\\NoteController@index');
+Route::get('/note/{id}', 'Api\\NoteController@show');
+
