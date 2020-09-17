@@ -17,7 +17,7 @@ class UserController extends Controller
     {
         $users = User::all();
 
-        return response()->json($users);
+        return response($users);
     }
 
     /**
@@ -28,7 +28,17 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'bail|required|string|max:255|min:6',
+            'email' => 'required|unique:users|string|max:255',
+            'password' => 'required|confirmed|string|max:255|min:6',
+        ]);
+
+        $user = new User();
+        $user->fill($request->all());
+        $user->save();
+
+        return response('', 201);
     }
 
     /**
@@ -39,9 +49,9 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = User::with('notes')->where(['id' => $id])->first();
+        $user = User::where(['id' => $id])->firstOrFail();
 
-        return response()->json($user);
+        return response($user);
     }
 
     /**
@@ -53,7 +63,16 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $user = User::where(['id' => $id])->firstOrFail();
+
+        $request->validate([
+            'name' => 'bail|string|max:255|min:6',
+            'email' => 'unique:users|string|max:255',
+            'password' => 'confirmed|string|max:255|min:6',
+        ]);
+
+        $user->fill($request->all());
+        $user->save();
     }
 
     /**
@@ -64,6 +83,9 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $user = User::where(['id' => $id])->firstOrFail();
+        $user->delete();
+
+        return response('', 204);
     }
 }
