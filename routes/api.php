@@ -14,6 +14,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// Auth
 Route::group([
     'prefix' => 'auth'
 ], function ($router) {
@@ -23,17 +24,15 @@ Route::group([
     Route::post('me', 'AuthController@me');
 });
 
+// Notes
 Route::group([
-    'prefix' => '/users',
+    'prefix' => '/notes',
     'middleware' => 'apiJwt',
 ], function ($router) {
-    Route::get('', 'Api\\UserController@index');
-    Route::get('/{id}', 'Api\\UserController@show');
-    Route::post('', 'Api\\UserController@store');
-    Route::post('{id}', 'Api\\UserController@update');
-    Route::delete('{id}', 'Api\\UserController@destroy');
+    Route::get('/', 'Api\\NoteController@index');
+    Route::get('/{id}', 'Api\\NoteController@show');
 });
 
-Route::get('/notes', 'Api\\NoteController@index');
-Route::get('/note/{id}', 'Api\\NoteController@show');
+// User
+Route::post('/users', 'Api\\UserController@store');
 
