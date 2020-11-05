@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Users\StoreRequest;
 use App\User;
 use Illuminate\Http\Request;
 
@@ -26,13 +27,9 @@ class UserController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreRequest $request)
     {
-        $request->validate([
-            'name' => 'bail|required|string|max:255|min:6',
-            'email' => 'required|unique:users|string|max:255',
-            'password' => 'required|confirmed|string|max:255|min:6',
-        ]);
+        $request->validated();
 
         $user = new User();
         $user->fill($request->all());
