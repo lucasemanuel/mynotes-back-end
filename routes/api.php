@@ -35,4 +35,9 @@ Route::group([
 
 // User
 Route::post('/users', 'Api\\UserController@store');
-
+Route::group([
+    'prefix' => 'users',
+    'middleware' => 'apiJwt',
+], function ($router) {
+    Route::get('/', 'Api\\UserController@index');
+});
