@@ -22,8 +22,8 @@ class ProtectedRoute extends BaseMiddleware
             JWTAuth::parseToken()->authenticate();
         } catch (\Exception $exception) {
             return response()->json([
-                'message' => 'Authorization token not found'
-            ], 404);
+                'message' => 'User is not authenticated'
+            ], 401);
         }
 
         return $next($request);
