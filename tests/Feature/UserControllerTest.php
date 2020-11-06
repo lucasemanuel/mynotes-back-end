@@ -59,4 +59,11 @@ class UserControllerTest extends TestCase
         $response->assertOk();
         $response->assertJson($user->toArray());
     }
+
+    /** @test */
+    public function should_return_unauthorized_when_the_user_is_not_logged()
+    {
+        $response = $this->getJson('/api/users');
+        $response->assertUnauthorized();
+    }
 }
