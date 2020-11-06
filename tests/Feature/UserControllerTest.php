@@ -2,9 +2,10 @@
 
 namespace Tests\Feature;
 
+use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserControllerTest extends TestCase
 {
@@ -22,10 +23,6 @@ class UserControllerTest extends TestCase
 
         $response = $this->postJson('/api/users', $data);
         $response->assertCreated();
-
-        $this->assertDatabaseHas('users', [
-            'email' => $email,
-        ]);
     }
 
     /** @test */
@@ -50,5 +47,16 @@ class UserControllerTest extends TestCase
             'password_confirmation' => 'abcdef'
         ]);
         $response3->assertStatus(422);
+    }
+
+    /** @test */
+    public function should_return_logged_user()
+    {
+        $user = factory(User::class)->create();
+        $token = JWTAuth::fromUser($user);
+        $response = $this->getJson('/api/users', ['Authorization' => 'Bearer ' . $token]);
+
+        $response->assertOk();
+        $response->assertJson($user->toArray());
     }
 }
