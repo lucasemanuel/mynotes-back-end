@@ -39,25 +39,4 @@ class AuthControllerTest extends TestCase
         $response->assertUnauthorized()
             ->assertJsonStructure(['message']);
     }
-
-    /** @test */
-    public function should_return_true_if_token_is_valid()
-    {
-        $user = factory(User::class)->create([
-            'password' => 'password'
-        ]);
-        $token = JWTAuth::fromUser($user);
-
-        $response = $this->actingAs($user)
-            ->postJson(
-                '/api/auth/check',
-                ['password' => 'password'],
-                ['Authorization' => 'Bearer ' . $token]
-            );
-
-        $response->assertOk()
-            ->assertJson([
-                'auth' => true
-            ]);
-    }
 }
