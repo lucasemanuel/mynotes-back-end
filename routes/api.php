@@ -19,7 +19,6 @@ Route::group([
     'prefix' => 'auth'
 ], function ($router) {
     Route::post('login', 'Api\\AuthController@login');
-    Route::post('check', 'Api\\AuthController@check');
     Route::post('logout', 'Api\\AuthController@logout');
 });
 

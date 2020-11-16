@@ -19,15 +19,6 @@ class AuthController extends Controller
         return $this->respondWithToken($token);
     }
 
-    public function check()
-    {
-        try {
-            return response(['auth' => (Boolean) JWTAuth::parseToken()->authenticate()]);
-        } catch (\Exception $exception) {
-            return response(['auth' => false]);
-        }
-    }
-
     public function logout()
     {
         auth()->logout();
