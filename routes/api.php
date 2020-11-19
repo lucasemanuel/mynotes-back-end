@@ -15,12 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Auth
-Route::group([
-    'prefix' => 'auth'
-], function ($router) {
-    Route::post('login', 'Api\\AuthController@login');
-    Route::post('logout', 'Api\\AuthController@logout');
-});
+Route::post('/auth/login', 'Api\\AuthController@login');
+Route::post('/auth/logout', 'Api\\AuthController@logout')->middleware('auth:api');
 
 // Notes
 Route::group([
