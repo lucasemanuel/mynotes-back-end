@@ -16,22 +16,13 @@ class AuthController extends Controller
             return response(['message' => 'E-mail ou senha estão incorretos.'], 401);
         }
 
-        return $this->respondWithToken($token);
+        return response(['token' => $token]);
     }
 
     public function logout()
     {
         auth()->logout();
 
-        return response(['message' => 'Até mais.']);
-    }
-
-    protected function respondWithToken($token)
-    {
-        return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth('api')->factory()->getTTL() * 60
-        ]);
+        return response(['message' => 'Até mais =D']);
     }
 }
