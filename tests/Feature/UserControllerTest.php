@@ -53,8 +53,9 @@ class UserControllerTest extends TestCase
     public function should_return_logged_user()
     {
         $user = factory(User::class)->create();
-        $token = JWTAuth::fromUser($user);
-        $response = $this->getJson('/api/users', ['Authorization' => 'Bearer ' . $token]);
+
+        $response = $this->actingAs($user)
+            ->getJson('/api/users');
 
         $response->assertOk();
         $response->assertJson($user->toArray());
