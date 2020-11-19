@@ -17,7 +17,7 @@ class AuthControllerTest extends TestCase
             'password' => 'password'
         ]);
 
-        $response = $this->post('/api/auth/login', [
+        $response = $this->postJson('/api/auth/login', [
             'email' => $user->email,
             'password' => 'password'
         ]);
@@ -33,10 +33,34 @@ class AuthControllerTest extends TestCase
             'password' => 'password'
         ]);
 
-        $response = $this->post('/api/auth/login', [
+        $response = $this->postJson('/api/auth/login', [
             'email' => $user->email,
             'password' => 'PASSWORD'
         ]);
+
+        $response->assertUnauthorized()
+            ->assertJsonStructure(['message']);
+    }
+
+    /** @test */
+    public function should_return_unauthorized_after_logout()
+    {
+        $user = factory(User::class)->create([
+            'password' => '123456'
+        ]);
+
+        $response = $this->postJson('/api/auth/login', [
+            'email' => $user->email,
+            'password' => '123456'
+        ]);
+
+        $response->assertJsonStructure(['token']);
+
+        $this->withHeader('Authorization', 'Bearer ' . $response['token'])
+            ->json('post',  '/api/auth/logout');
+
+        $response = $this->withHeader('Authorization', 'Bearer ' . $response['token'])
+            ->json('post',  '/api/auth/logout');
 
         $response->assertUnauthorized()
             ->assertJsonStructure(['message']);
