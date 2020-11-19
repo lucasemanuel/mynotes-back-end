@@ -25,7 +25,7 @@ Route::group([
 // Notes
 Route::group([
     'prefix' => '/notes',
-    'middleware' => 'apiJwt',
+    'middleware' => 'auth:api',
 ], function ($router) {
     Route::get('/', 'Api\\NoteController@index');
     Route::get('/{id}', 'Api\\NoteController@show');
@@ -35,7 +35,7 @@ Route::group([
 Route::post('/users', 'Api\\UserController@store');
 Route::group([
     'prefix' => 'users',
-    'middleware' => 'apiJwt',
+    'middleware' => 'auth:api',
 ], function ($router) {
     Route::get('/', 'Api\\UserController@index');
 });
