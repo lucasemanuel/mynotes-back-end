@@ -3,11 +3,13 @@
 namespace Tests\Feature;
 
 use App\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthControllerTest extends TestCase
 {
+    use RefreshDatabase;
+
     /** @test */
     public function should_return_token_at_login()
     {
@@ -21,7 +23,7 @@ class AuthControllerTest extends TestCase
         ]);
 
         $response->assertOk()
-            ->assertJsonStructure(['access_token']);
+            ->assertJsonStructure(['token']);
     }
 
     /** @test */
