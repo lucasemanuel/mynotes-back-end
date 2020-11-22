@@ -11,7 +11,10 @@ class NoteController extends Controller
 {
     public function index()
     {
-        $notes = Note::all();
+        $user = auth()->user()->id;
+        $notes = Note::query()
+            ->where('user_id', '=', $user->id)
+            ->paginate(20);
 
         return response()->json($notes);
     }
