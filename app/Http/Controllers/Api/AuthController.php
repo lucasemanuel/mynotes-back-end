@@ -25,4 +25,11 @@ class AuthController extends Controller
 
         return response(['message' => 'Até mais =D']);
     }
+
+    public function refresh()
+    {
+        $token = auth()->refresh();
+
+        return response(['token' => $token]);
+    }
 }
