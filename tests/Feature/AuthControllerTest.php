@@ -65,4 +65,25 @@ class AuthControllerTest extends TestCase
         $response->assertUnauthorized()
             ->assertJsonStructure(['message']);
     }
+
+    /** @test */
+    public function should_return_refresh_token()
+    {
+        $user = factory(User::class)->create([
+            'password' => 'password'
+        ]);
+
+        $response = $this->postJson('/api/auth/login', [
+            'email' => $user->email,
+            'password' => 'password'
+        ]);
+        $token = $response['token'];
+
+        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+            ->json('post',  '/api/auth/refresh');
+
+        $response->assertOk();
+        $response->assertJsonStructure(['token']);
+        $this->assertNotEquals($token, $response['token']);
+    }
 }
