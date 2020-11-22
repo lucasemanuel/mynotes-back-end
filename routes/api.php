@@ -31,6 +31,7 @@ Route::group([
 ], function ($router) {
     Route::get('/', 'Api\\NoteController@index');
     Route::get('/{id}', 'Api\\NoteController@show');
+    Route::post('/', 'Api\\NoteController@store');
 });
 
 // User
