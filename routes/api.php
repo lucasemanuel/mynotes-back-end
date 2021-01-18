@@ -22,6 +22,7 @@ Route::group([
 ], function ($router) {
     Route::post('/logout', 'Api\\AuthController@logout');
     Route::post('/refresh', 'Api\\AuthController@refresh');
+    Route::post('/check', 'Api\\AuthController@check');
 });
 
 // Notes
