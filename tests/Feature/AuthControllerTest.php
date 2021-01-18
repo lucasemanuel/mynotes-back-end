@@ -86,4 +86,24 @@ class AuthControllerTest extends TestCase
         $response->assertJsonStructure(['token']);
         $this->assertNotEquals($token, $response['token']);
     }
+
+    /** @test */
+    public function should_return_ok_if_user_is_logged()
+    {
+        $user = factory(User::class)->create([
+            'password' => 'password'
+        ]);
+
+        $response = $this->actingAs($user, 'api')
+            ->post('/api/auth/check');
+
+        $response->assertNoContent();
+    }
+
+    /** @test */
+    public function should_return_unauthorized_if_user_is_not_logged()
+    {
+        $response = $this->post('/api/auth/check');
+        $response->assertUnauthorized();
+    }
 }
