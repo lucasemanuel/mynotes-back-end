@@ -40,4 +40,50 @@ class NoteControllerTest extends TestCase
         $response->assertOk();
         $this->assertCount(20, $response['data']);
     }
+
+    /** @test */
+    public function should_update_note()
+    {
+        $user = factory(User::class)->create();
+        $note = factory(Note::class, 1)->create();
+
+        $text = "Meu texto";
+        $response = $this->actingAs($user, 'api')
+            ->putJson("/api/notes/$note->id", [
+                'body' => $text
+            ]);
+
+        $response->assertOk();
+        $this->assertDatabaseHas('notes', ['body' => $text, 'id' => $note->id]);
+    }
+
+    /** @test */
+    public function should_mark_note_as_favorite()
+    {
+        $user = factory(User::class)->create();
+        $note = factory(Note::class, 1)->create([
+            'is_favorite' => false
+        ]);
+
+        $response = $this->actingAs($user, 'api')
+            ->patchJson("/api/notes/$note->id");
+
+        $response->assertOk();
+        $this->assertDatabaseHas('notes', ['is_favorite' => true, 'id' => $note->id]);
+    }
+
+    /** @test */
+    public function should_mark_off_note_as_favorite()
+    {
+        $user = factory(User::class)->create();
+        $note = factory(Note::class, 1)->create([
+            'is_favorite' => true
+        ]);
+
+        $response = $this->actingAs($user, 'api')
+            ->patchJson("/api/notes/$note->id");
+
+        $response->assertOk();
+        $this->assertDatabaseHas('notes', ['is_favorite' => false, 'id' => $note->id]);
+    }
 }
