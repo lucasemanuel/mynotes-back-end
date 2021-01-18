@@ -33,6 +33,8 @@ Route::group([
     Route::get('/', 'Api\\NoteController@index');
     Route::get('/{id}', 'Api\\NoteController@show');
     Route::post('/', 'Api\\NoteController@store');
+    Route::put('/', 'Api\\NoteController@update');
+    Route::patch('/', 'Api\\NoteController@mark');
 });
 
 // User
