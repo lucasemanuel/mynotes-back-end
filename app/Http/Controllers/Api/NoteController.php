@@ -11,12 +11,12 @@ class NoteController extends Controller
 {
     public function index()
     {
-        $user = auth()->user()->id;
-        $notes = Note::query()
-            ->where('user_id', '=', $user->id)
+        $user = auth()->user();
+        $notes = $user->notes()
+            ->orderByDesc('updated_at')
             ->paginate(20);
 
-        return response()->json($notes);
+        return response($notes);
     }
 
     public function store(StoreRequest $request)
@@ -34,7 +34,7 @@ class NoteController extends Controller
     {
         $note = Note::with('user')->where(['id' => $id])->first();
 
-        return response()->json($note);
+        return response($note);
     }
 
     public function update(Request $request, $id)
