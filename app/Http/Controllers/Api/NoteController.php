@@ -4,8 +4,8 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Notes\StoreRequest;
+use App\Http\Requests\Notes\UpdateRequest;
 use App\Note;
-use Illuminate\Http\Request;
 
 class NoteController extends Controller
 {
@@ -37,9 +37,20 @@ class NoteController extends Controller
         return response($note);
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateRequest $request, Note $note)
     {
-        //
+        $note->fill($request->all());
+        $note->save();
+
+        return response($note);
+    }
+
+    public function mark(Note $note)
+    {
+        $note->is_favorite = !$note->is_favorite;
+        $note->save();
+
+        return response($note);
     }
 
     public function destroy($id)
