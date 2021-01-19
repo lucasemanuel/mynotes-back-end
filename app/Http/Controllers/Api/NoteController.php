@@ -6,15 +6,19 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Notes\StoreRequest;
 use App\Http\Requests\Notes\UpdateRequest;
 use App\Note;
+use Illuminate\Http\Request;
 
 class NoteController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
         $notes = $user->notes()
-            ->orderByDesc('updated_at')
-            ->paginate(20);
+            ->when($request->text, function ($query, $body) {
+                $query->where('body', 'like', "%{$body}%");
+            })->when($request->favorite, function ($query, $favorite) {
+                $query->where('is_favorite', '=', true);
+            })->orderByDesc('updated_at')->paginate(20);
 
         return response($notes);
     }
