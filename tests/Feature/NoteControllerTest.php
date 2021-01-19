@@ -45,7 +45,10 @@ class NoteControllerTest extends TestCase
     public function should_update_note()
     {
         $user = factory(User::class)->create();
-        $note = factory(Note::class, 1)->create();
+        $note = factory(Note::class)->create([
+            'user_id' => $user->id
+        ]);
+
 
         $text = "Meu texto";
         $response = $this->actingAs($user, 'api')
@@ -61,7 +64,8 @@ class NoteControllerTest extends TestCase
     public function should_mark_note_as_favorite()
     {
         $user = factory(User::class)->create();
-        $note = factory(Note::class, 1)->create([
+        $note = factory(Note::class,)->create([
+            'user_id' => $user->id,
             'is_favorite' => false
         ]);
 
@@ -76,7 +80,8 @@ class NoteControllerTest extends TestCase
     public function should_mark_off_note_as_favorite()
     {
         $user = factory(User::class)->create();
-        $note = factory(Note::class, 1)->create([
+        $note = factory(Note::class)->create([
+            'user_id' => $user->id,
             'is_favorite' => true
         ]);
 
