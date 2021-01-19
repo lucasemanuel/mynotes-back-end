@@ -106,4 +106,49 @@ class NoteControllerTest extends TestCase
         $response->assertStatus(204);
         $this->assertDatabaseMissing('notes', ['id' => $id]);
     }
+
+    /** @test */
+    public function should_return_note_list_by_content_search()
+    {
+        $user = factory(User::class)->create();
+
+        $amount = 3;
+        $query = 'MEU SUPER TEXTO!!!';
+
+        factory(Note::class, 10)->create([
+            'user_id' => $user->id,
+        ]);
+        factory(Note::class, $amount)->create([
+            'user_id' => $user->id,
+            'body' => $query
+        ]);
+
+        $response = $this->actingAs($user, 'api')
+            ->getJson("/api/notes?text=$query");
+
+        $response->assertOk();
+        $this->assertCount($amount, $response['data']);
+    }
+
+    /** @test */
+    public function should_return_only_favorite_notes()
+    {
+        $user = factory(User::class)->create();
+
+        $amount = 8;
+        factory(Note::class, 7)->create([
+            'user_id' => $user->id,
+            'is_favorite' => false
+        ]);
+        factory(Note::class, $amount)->create([
+            'user_id' => $user->id,
+            'is_favorite' => true
+        ]);
+
+        $response = $this->actingAs($user, 'api')
+            ->getJson("/api/notes?favorite=true");
+
+        $response->assertOk();
+        $this->assertCount($amount, $response['data']);
+    }
 }
