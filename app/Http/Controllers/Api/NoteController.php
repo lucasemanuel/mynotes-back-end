@@ -53,8 +53,10 @@ class NoteController extends Controller
         return response($note);
     }
 
-    public function destroy($id)
+    public function destroy(Note $note)
     {
-        //
+        $note->delete();
+
+        return response(null, 204);
     }
 }

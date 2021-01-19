@@ -35,6 +35,7 @@ Route::group([
     Route::post('/', 'Api\\NoteController@store');
     Route::put('/{note}', 'Api\\NoteController@update');
     Route::patch('/{note}', 'Api\\NoteController@mark');
+    Route::delete('/{note}', 'Api\\NoteController@destroy');
 });
 
 // User
