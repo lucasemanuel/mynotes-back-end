@@ -49,7 +49,6 @@ class NoteControllerTest extends TestCase
             'user_id' => $user->id
         ]);
 
-
         $text = "Meu texto";
         $response = $this->actingAs($user, 'api')
             ->putJson("/api/notes/$note->id", [
@@ -90,5 +89,21 @@ class NoteControllerTest extends TestCase
 
         $response->assertOk();
         $this->assertDatabaseHas('notes', ['is_favorite' => false, 'id' => $note->id]);
+    }
+
+    /** @test */
+    public function should_delete_a_note()
+    {
+        $user = factory(User::class)->create();
+        $notes = factory(Note::class, 10)->create([
+            'user_id' => $user->id,
+        ]);
+
+        $id = $notes[rand(0, 9)]->id;
+        $response = $this->actingAs($user, 'api')
+            ->deleteJson("/api/notes/$id");
+
+        $response->assertStatus(204);
+        $this->assertDatabaseMissing('notes', ['id' => $id]);
     }
 }
