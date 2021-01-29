@@ -31,7 +31,7 @@ Route::group([
     'middleware' => 'auth:api',
 ], function ($router) {
     Route::get('/', 'Api\\NoteController@index');
-    Route::get('/{id}', 'Api\\NoteController@show');
+    Route::get('/{note}', 'Api\\NoteController@show');
     Route::post('/', 'Api\\NoteController@store');
     Route::put('/{note}', 'Api\\NoteController@update');
     Route::patch('/{note}', 'Api\\NoteController@mark');
