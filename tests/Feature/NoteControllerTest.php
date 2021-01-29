@@ -30,7 +30,7 @@ class NoteControllerTest extends TestCase
     public function should_note_list()
     {
         $user = factory(User::class)->create();
-        factory(Note::class, 100)->create([
+        factory(Note::class, 64)->create([
             'user_id' => $user->id
         ]);
 
@@ -38,7 +38,7 @@ class NoteControllerTest extends TestCase
             ->getJson('/api/notes');
 
         $response->assertOk();
-        $this->assertCount(20, $response['data']);
+        $response->assertJsonCount(64);
     }
 
     /** @test */
@@ -127,7 +127,7 @@ class NoteControllerTest extends TestCase
             ->getJson("/api/notes?text=$query");
 
         $response->assertOk();
-        $this->assertCount($amount, $response['data']);
+        $response->assertJsonCount($amount);
     }
 
     /** @test */
@@ -149,6 +149,6 @@ class NoteControllerTest extends TestCase
             ->getJson("/api/notes?favorite=true");
 
         $response->assertOk();
-        $this->assertCount($amount, $response['data']);
+        $response->assertJsonCount($amount);
     }
 }
