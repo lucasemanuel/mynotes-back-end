@@ -53,7 +53,7 @@ Executar os testes
 php artisan test
 ```
 
-Aplicatar Tradução
+Aplicar Tradução
 ```
 php artisan vendor:publish --tag=laravel-pt-br-localization
 ```
