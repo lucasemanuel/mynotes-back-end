@@ -1,8 +1,8 @@
-# <a name ="https://github.com/lucasemanuel/mynotes#-mynotes" style="color:#000"><img src="https://raw.githubusercontent.com/lucasemanuel/mynotes-front-end/master/public/logo.svg" alt="logo mynotes" title="mynotes" height="60"/> myNotes</a> (Back-end)
+# <a name="logo" href="https://github.com/lucasemanuel/mynotes#-mynotes"><img src="https://raw.githubusercontent.com/lucasemanuel/mynotes-front-end/master/public/logo.svg" alt="logo mynotes" title="mynotes" height="60"/>myNotes</a> (Back-end)
 
 Aplicativo simples de anotações desenvolvido com laravel (back-end).
 
-## Install
+## Install <a name = "install"></a>
 
 Instalar Dependências
 ```
