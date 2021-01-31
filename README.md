@@ -25,7 +25,7 @@ php artisan jwt:secret
 ```
 
 Configurar o banco de dados, crie previamente o banco para essa aplicação e set essas variáveis no arquivo `.evn`
-
+Recomendo usar mysql ou postgresql
 ```
 DB_CONNECTION=
 DB_HOST=
@@ -41,13 +41,7 @@ Executar as migração
 php artisan migrate
 ```
 
-Iniciar o servidor
-
-```
-php artisan serve
-```
-
-Executar os testes
+Executar os testes (usando sqlite)
 
 ```
 php artisan test
@@ -56,4 +50,10 @@ php artisan test
 Aplicar Tradução
 ```
 php artisan vendor:publish --tag=laravel-pt-br-localization
+```
+
+Iniciar o servidor
+
+```
+php artisan serve
 ```
