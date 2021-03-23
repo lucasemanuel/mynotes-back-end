@@ -43,7 +43,7 @@ class AuthControllerTest extends TestCase
     }
 
     /** @test */
-    public function should_return_unauthorized_after_logout()
+    public function should_return_unauthorized_when_requesting_resources_after_logout()
     {
         $user = factory(User::class)->create([
             'password' => '123456'
@@ -56,10 +56,10 @@ class AuthControllerTest extends TestCase
 
         $response->assertJsonStructure(['token']);
 
-        $this->withHeader('Authorization', 'Bearer ' . $response['token'])
+        $this->withHeader('Authorization', "Bearer {$response['token']}")
             ->json('post',  '/api/auth/logout');
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $response['token'])
+        $response = $this->withHeader('Authorization', "Bearer {$response['token']}")
             ->json('post',  '/api/auth/logout');
 
         $response->assertUnauthorized()
@@ -73,13 +73,12 @@ class AuthControllerTest extends TestCase
             'password' => 'password'
         ]);
 
-        $response = $this->postJson('/api/auth/login', [
+        $token = $this->postJson('/api/auth/login', [
             'email' => $user->email,
             'password' => 'password'
-        ]);
-        $token = $response['token'];
+        ])['token'];
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        $response = $this->withHeader('Authorization', "Bearer $token")
             ->json('post',  '/api/auth/refresh');
 
         $response->assertOk();
@@ -95,15 +94,8 @@ class AuthControllerTest extends TestCase
         ]);
 
         $response = $this->actingAs($user, 'api')
-            ->post('/api/auth/check');
+            ->getJson('/api/notes');
 
-        $response->assertNoContent();
-    }
-
-    /** @test */
-    public function should_return_unauthorized_if_user_is_not_logged()
-    {
-        $response = $this->post('/api/auth/check');
-        $response->assertStatus(500);
+        $response->assertOk();
     }
 }

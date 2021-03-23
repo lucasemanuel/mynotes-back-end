@@ -28,25 +28,22 @@ class UserControllerTest extends TestCase
     /** @test */
     public function should_return_unprocessable_entity_when_incorrect_data_is_sent()
     {
-        $response1 = $this->postJson('/api/users', [
+        ($this->postJson('/api/users', [
             'email' => 'no_email',
             'password' => '123456',
             'password_confirmation' => '123456'
-        ]);
-        $response1->assertStatus(422);
+        ]))>assertStatus(422);
 
-        $response2 = $this->postJson('/api/users', [
+        ($this->postJson('/api/users', [
             'email' => 'email@email.com',
             'password' => '123456',
-        ]);
-        $response2->assertStatus(422);
+        ]))->assertStatus(422);
 
-        $response3 = $this->postJson('/api/users', [
+        ($this->postJson('/api/users', [
             'email' => 'email@email.com',
             'password' => '123456',
             'password_confirmation' => 'abcdef'
-        ]);
-        $response3->assertStatus(422);
+        ]))->assertStatus(422);
     }
 
     /** @test */

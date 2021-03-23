@@ -27,10 +27,10 @@ class NoteControllerTest extends TestCase
     }
 
     /** @test */
-    public function should_note_list()
+    public function should_list_x_notes_per_page()
     {
         $user = factory(User::class)->create();
-        factory(Note::class, 64)->create([
+        factory(Note::class, 200)->create([
             'user_id' => $user->id
         ]);
 
@@ -38,7 +38,8 @@ class NoteControllerTest extends TestCase
             ->getJson('/api/notes');
 
         $response->assertOk();
-        $response->assertJsonCount(64);
+        $response->assertJsonFragment(['per_page', 'total', 'current_page', 'last_page']);
+        $this->assertCount(64, $response['per_page']);
     }
 
     /** @test */
@@ -56,6 +57,7 @@ class NoteControllerTest extends TestCase
             ]);
 
         $response->assertOk();
+        $response->assertJson($note->toArray());
         $this->assertDatabaseHas('notes', ['body' => $text, 'id' => $note->id]);
     }
 
@@ -63,7 +65,7 @@ class NoteControllerTest extends TestCase
     public function should_mark_note_as_favorite()
     {
         $user = factory(User::class)->create();
-        $note = factory(Note::class,)->create([
+        $note = factory(Note::class)->create([
             'user_id' => $user->id,
             'is_favorite' => false
         ]);
@@ -72,6 +74,7 @@ class NoteControllerTest extends TestCase
             ->patchJson("/api/notes/$note->id");
 
         $response->assertOk();
+        $response->assertJson($note->toArray());
         $this->assertDatabaseHas('notes', ['is_favorite' => true, 'id' => $note->id]);
     }
 
@@ -88,6 +91,7 @@ class NoteControllerTest extends TestCase
             ->patchJson("/api/notes/$note->id");
 
         $response->assertOk();
+        $response->assertJson($note->toArray());
         $this->assertDatabaseHas('notes', ['is_favorite' => false, 'id' => $note->id]);
     }
 
@@ -103,7 +107,7 @@ class NoteControllerTest extends TestCase
         $response = $this->actingAs($user, 'api')
             ->deleteJson("/api/notes/$id");
 
-        $response->assertStatus(204);
+        $response->assertNoContent();
         $this->assertDatabaseMissing('notes', ['id' => $id]);
     }
 
