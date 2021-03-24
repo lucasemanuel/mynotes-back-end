@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class UserControllerTest extends TestCase
 {
@@ -14,9 +13,8 @@ class UserControllerTest extends TestCase
     /** @test */
     public function should_create_a_user()
     {
-        $email = 'any@email.com';
         $data = [
-            'email' => $email,
+            'email' => 'any@email.com',
             'password' => '123456',
             'password_confirmation' => '123456'
         ];
@@ -32,7 +30,7 @@ class UserControllerTest extends TestCase
             'email' => 'no_email',
             'password' => '123456',
             'password_confirmation' => '123456'
-        ]))>assertStatus(422);
+        ]))->assertStatus(422);
 
         ($this->postJson('/api/users', [
             'email' => 'email@email.com',
