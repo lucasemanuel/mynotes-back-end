@@ -18,17 +18,16 @@ use Illuminate\Support\Facades\Route;
 Route::post('/auth/login', 'Api\\AuthController@login');
 Route::group([
     'prefix' => '/auth',
-    'middleware' => 'auth:api',
+    'middleware' => 'auth',
 ], function ($router) {
     Route::post('/logout', 'Api\\AuthController@logout');
     Route::post('/refresh', 'Api\\AuthController@refresh');
-    Route::post('/check', 'Api\\AuthController@check');
 });
 
 // Notes
 Route::group([
     'prefix' => '/notes',
-    'middleware' => 'auth:api',
+    'middleware' => 'auth',
 ], function ($router) {
     Route::get('/', 'Api\\NoteController@index');
     Route::get('/{note}', 'Api\\NoteController@show');
@@ -42,7 +41,7 @@ Route::group([
 Route::post('/users', 'Api\\UserController@store');
 Route::group([
     'prefix' => 'users',
-    'middleware' => 'auth:api',
+    'middleware' => 'auth',
 ], function ($router) {
     Route::get('/', 'Api\\UserController@index');
 });
