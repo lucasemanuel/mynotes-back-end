@@ -4,6 +4,7 @@ namespace Tests\Feature;
 
 use App\Note;
 use App\User;
+use Faker\Provider\Lorem;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -38,8 +39,8 @@ class NoteControllerTest extends TestCase
             ->getJson('/api/notes');
 
         $response->assertOk();
-        $response->assertJsonFragment(['per_page', 'total', 'current_page', 'last_page']);
-        $this->assertCount(64, $response['per_page']);
+        $response->assertJsonStructure(['total', 'per_page', 'data', 'current_page', 'last_page']);
+        $this->assertCount(32, $response['data']);
     }
 
     /** @test */
@@ -57,7 +58,6 @@ class NoteControllerTest extends TestCase
             ]);
 
         $response->assertOk();
-        $response->assertJson($note->toArray());
         $this->assertDatabaseHas('notes', ['body' => $text, 'id' => $note->id]);
     }
 
@@ -74,7 +74,6 @@ class NoteControllerTest extends TestCase
             ->patchJson("/api/notes/$note->id");
 
         $response->assertOk();
-        $response->assertJson($note->toArray());
         $this->assertDatabaseHas('notes', ['is_favorite' => true, 'id' => $note->id]);
     }
 
@@ -91,7 +90,6 @@ class NoteControllerTest extends TestCase
             ->patchJson("/api/notes/$note->id");
 
         $response->assertOk();
-        $response->assertJson($note->toArray());
         $this->assertDatabaseHas('notes', ['is_favorite' => false, 'id' => $note->id]);
     }
 
@@ -131,7 +129,7 @@ class NoteControllerTest extends TestCase
             ->getJson("/api/notes?text=$query");
 
         $response->assertOk();
-        $response->assertJsonCount($amount);
+        $this->assertCount($amount, $response['data']);
     }
 
     /** @test */
@@ -153,7 +151,7 @@ class NoteControllerTest extends TestCase
             ->getJson("/api/notes?favorite=true");
 
         $response->assertOk();
-        $response->assertJsonCount($amount);
+        $this->assertCount($amount, $response['data']);
     }
 
     /** @test */
@@ -171,5 +169,25 @@ class NoteControllerTest extends TestCase
             ]);
 
         $response->assertStatus(400);
+    }
+
+    /** @test */
+    public function should_return_unprocessable_entity_when_incorrect_data_is_sent()
+    {
+        $user = factory(User::class)->create();
+
+        ($this->actingAs($user, 'api')
+            ->postJson('/api/notes', [
+                'body' => Lorem::text(100),
+                'is_favorite' => 'no_boolean',
+            ])
+        )->assertStatus(422);
+
+        ($this->actingAs($user, 'api')
+            ->postJson('/api/notes', [
+                'body' => Lorem::text(10000),
+                'is_favorite' => true,
+            ])
+        )->assertStatus(422);
     }
 }
