@@ -32,9 +32,4 @@ class AuthController extends Controller
 
         return response(['token' => $token]);
     }
-
-    public function check()
-    {
-        return response('', 204);
-    }
 }
