@@ -8,6 +8,11 @@ use JWTAuth;
 
 class AuthController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth')->except(['login']);
+    }
+
     public function login(Request $request)
     {
         $credentials = $request->only(['email', 'password']);
