@@ -6,12 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Note extends Model
 {
-    protected $table = 'notes';
+    public const LIMIT_NOTE_BY_USER = 128;
 
-    protected $casts = [
-        'created_at' => 'datetime:d/m/Y H:i:s',
-        'updated_at' => 'datetime:d/m/Y H:i:s',
-    ];
+    protected $table = 'notes';
 
     protected $fillable = [
         'body', 'is_favorite'
