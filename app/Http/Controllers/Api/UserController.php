@@ -27,6 +27,6 @@ class UserController extends Controller
         $user->fill($request->all());
         $user->save();
 
-        return response('', 201);
+        return response($user, 201);
     }
 }
