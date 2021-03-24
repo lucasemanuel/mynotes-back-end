@@ -15,11 +15,10 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Auth
-Route::post('/auth/login', 'Api\\AuthController@login');
 Route::group([
     'prefix' => '/auth',
-    'middleware' => 'auth',
 ], function ($router) {
+    Route::post('/login', 'Api\\AuthController@login');
     Route::post('/logout', 'Api\\AuthController@logout');
     Route::post('/refresh', 'Api\\AuthController@refresh');
 });
@@ -38,10 +37,9 @@ Route::group([
 });
 
 // User
-Route::post('/users', 'Api\\UserController@store');
 Route::group([
     'prefix' => 'users',
-    'middleware' => 'auth',
 ], function ($router) {
     Route::get('/', 'Api\\UserController@index');
+    Route::post('/', 'Api\\UserController@store');
 });
