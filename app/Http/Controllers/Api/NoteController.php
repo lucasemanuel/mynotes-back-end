@@ -18,7 +18,7 @@ class NoteController extends Controller
                 $query->where('body', 'like', "%{$body}%");
             })->when($request->favorite, function ($query, $favorite) {
                 $query->where('is_favorite', '=', (bool) $favorite);
-            })->orderByDesc('updated_at')->get();
+            })->orderByDesc('updated_at')->paginate(32);
 
         return response($notes);
     }
@@ -26,7 +26,7 @@ class NoteController extends Controller
     public function store(StoreRequest $request)
     {
         $user = auth()->user();
-        if ($user->notes->count() > 128) {
+        if ($user->notes->count() >= Note::LIMIT_NOTE_BY_USER) {
             return response([
                 'message' => 'Você atingiu o limite de notas, não possível registrar uma nova nota.'
             ], 400);
