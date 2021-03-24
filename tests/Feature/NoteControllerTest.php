@@ -30,7 +30,7 @@ class NoteControllerTest extends TestCase
     public function should_list_x_notes_per_page()
     {
         $user = factory(User::class)->create();
-        factory(Note::class, 200)->create([
+        factory(Note::class, Note::LIMIT_NOTE_BY_USER)->create([
             'user_id' => $user->id
         ]);
 
@@ -154,5 +154,22 @@ class NoteControllerTest extends TestCase
 
         $response->assertOk();
         $response->assertJsonCount($amount);
+    }
+
+    /** @test */
+    public function should_return_error_when_reaching_note_limit_per_user()
+    {
+        $user = factory(User::class)->create();
+
+        factory(Note::class, Note::LIMIT_NOTE_BY_USER)->create([
+            'user_id' => $user->id
+        ]);
+
+        $response = $this->actingAs($user, 'api')
+            ->postJson('/api/notes', [
+                'body' => 'Mais uma nota.'
+            ]);
+
+        $response->assertStatus(400);
     }
 }
