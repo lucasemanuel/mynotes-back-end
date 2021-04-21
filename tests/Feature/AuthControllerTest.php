@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\RecoveryPassword;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -79,7 +80,7 @@ class AuthControllerTest extends TestCase
         ])['token'];
 
         $response = $this->withHeader('Authorization', "Bearer $token")
-            ->json('post',  '/api/auth/refresh');
+            ->json('post', '/api/auth/refresh');
 
         $response->assertOk();
         $response->assertJsonStructure(['token']);
@@ -89,13 +90,43 @@ class AuthControllerTest extends TestCase
     /** @test */
     public function should_return_ok_if_user_is_logged()
     {
-        $user = factory(User::class)->create([
-            'password' => 'password'
-        ]);
+        $user = factory(User::class)->create();
 
         $response = $this->actingAs($user, 'api')
             ->getJson('/api/notes');
 
         $response->assertOk();
+    }
+
+    /** @test */
+    public function generate_encryption_to_update_the_password()
+    {
+        $user = factory(User::class)->create();
+
+        $response = $this->postJson('api/auth/recovery', [
+            'email' => $user->email
+        ]);
+
+        $response->assertOk();
+        $this->assertDatabaseHas('recovery_passwords', [
+            'user_id' => $user->id
+        ]);
+    }
+
+    /** @test */
+    public function should_check_if_the_token_to_change_password_has_expired()
+    {
+        $user = factory(User::class)->create();
+
+        $recoveryPassword = factory(RecoveryPassword::class, [
+            'user_id' => $user->id
+        ])->states('expired')->create();
+
+        $response = $this->postJson('api/auth/validate-token-recovery', [
+            'email' => $user->email,
+            'token' => $recoveryPassword->token
+        ]);
+
+        $response->assertForbidden();
     }
 }
