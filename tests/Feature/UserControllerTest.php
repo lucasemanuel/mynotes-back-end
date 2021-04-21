@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\RecoveryPassword;
 use App\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -61,5 +62,25 @@ class UserControllerTest extends TestCase
     {
         $response = $this->getJson('/api/users');
         $response->assertUnauthorized();
+    }
+
+    /** @test */
+    public function should_update_user_password()
+    {
+        $user = factory(User::class)->create();
+
+        $recoveryPassword = factory(RecoveryPassword::class, [
+            'user_id' => $user->id
+        ])->create();
+
+        $newPassword = 'newpassword';
+
+        $response = $this->patchJson('api/user', [
+            'email' => $user->email,
+            'token' => $recoveryPassword->token,
+            'password' => $newPassword,
+            'password_confirmation' => $newPassword
+        ]);
+        $response->assertOk();
     }
 }
