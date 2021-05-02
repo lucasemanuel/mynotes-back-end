@@ -14,5 +14,5 @@ $factory->define(RecoveryPassword::class, function (Faker $faker) {
 });
 
 $factory->state(RecoveryPassword::class, 'expired', [
-    'created_at' => Carbon::now()->subDay()
+    'created_at' => Carbon::now()->subHour(25)
 ]);
