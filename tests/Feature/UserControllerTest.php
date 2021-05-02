@@ -68,37 +68,43 @@ class UserControllerTest extends TestCase
     public function should_update_user_password()
     {
         $user = factory(User::class)->create();
+        $newPassword = 'newpassword';
 
         $recoveryPassword = factory(RecoveryPassword::class)->create([
             'user_id' => $user->id
         ]);
 
-        $newPassword = 'newpassword';
-
-        $response = $this->patchJson('api/user', [
+        $response = $this->patchJson('/api/users', [
             'email' => $user->email,
             'token' => $recoveryPassword->token,
             'password' => $newPassword,
             'password_confirmation' => $newPassword
         ]);
         $response->assertOk();
+
+        $this->assertDatabaseMissing('recovery_passwords', [
+            'token' => $recoveryPassword->token
+        ]);
     }
 
     /** @test */
-    public function should_check_if_the_token_to_reset_password_has_expired()
+    public function check_if_the_token_to_reset_password_has_expired()
     {
         $user = factory(User::class)->create();
+        $newPassword = 'newpassword';
 
         $recoveryPassword = factory(RecoveryPassword::class)
             ->states('expired')->create([
                 'user_id' => $user->id
             ]);
 
-        $response = $this->postJson('api/auth/validate-token-recovery', [
+        $response = $this->patchJson('/api/users', [
             'email' => $user->email,
-            'token' => $recoveryPassword->token
+            'token' => $recoveryPassword->token,
+            'password' => $newPassword,
+            'password_confirmation' => $newPassword
         ]);
 
-        $response->assertForbidden();
+        $response->assertNotFound();
     }
 }
