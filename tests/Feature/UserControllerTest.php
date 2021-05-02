@@ -69,9 +69,9 @@ class UserControllerTest extends TestCase
     {
         $user = factory(User::class)->create();
 
-        $recoveryPassword = factory(RecoveryPassword::class, [
+        $recoveryPassword = factory(RecoveryPassword::class)->create([
             'user_id' => $user->id
-        ])->create();
+        ]);
 
         $newPassword = 'newpassword';
 
@@ -82,5 +82,23 @@ class UserControllerTest extends TestCase
             'password_confirmation' => $newPassword
         ]);
         $response->assertOk();
+    }
+
+    /** @test */
+    public function should_check_if_the_token_to_reset_password_has_expired()
+    {
+        $user = factory(User::class)->create();
+
+        $recoveryPassword = factory(RecoveryPassword::class)
+            ->states('expired')->create([
+                'user_id' => $user->id
+            ]);
+
+        $response = $this->postJson('api/auth/validate-token-recovery', [
+            'email' => $user->email,
+            'token' => $recoveryPassword->token
+        ]);
+
+        $response->assertForbidden();
     }
 }

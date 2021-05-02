@@ -99,7 +99,7 @@ class AuthControllerTest extends TestCase
     }
 
     /** @test */
-    public function generate_encryption_to_update_the_password()
+    public function should_generate_token_to_reset_the_password()
     {
         $user = factory(User::class)->create();
 
@@ -111,22 +111,5 @@ class AuthControllerTest extends TestCase
         $this->assertDatabaseHas('recovery_passwords', [
             'user_id' => $user->id
         ]);
-    }
-
-    /** @test */
-    public function should_check_if_the_token_to_change_password_has_expired()
-    {
-        $user = factory(User::class)->create();
-
-        $recoveryPassword = factory(RecoveryPassword::class, [
-            'user_id' => $user->id
-        ])->states('expired')->create();
-
-        $response = $this->postJson('api/auth/validate-token-recovery', [
-            'email' => $user->email,
-            'token' => $recoveryPassword->token
-        ]);
-
-        $response->assertForbidden();
     }
 }
