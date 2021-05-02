@@ -43,4 +43,5 @@ Route::group([
 ], function ($router) {
     Route::get('/', 'Api\\UserController@index');
     Route::post('/', 'Api\\UserController@store');
+    Route::patch('/', 'Api\\UserController@update');
 });
