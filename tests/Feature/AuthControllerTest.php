@@ -112,4 +112,15 @@ class AuthControllerTest extends TestCase
             'user_id' => $user->id
         ]);
     }
+
+    /** @test */
+    public function should_return_forbidden_if_a_valid_token_exists()
+    {
+        $user = factory(RecoveryPassword::class)->create()->user;
+
+        $response = $this->postJson('api/auth/recovery', [
+            'email' => $user->email
+        ]);
+        $response->assertForbidden();
+    }
 }
