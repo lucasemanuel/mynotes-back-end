@@ -37,8 +37,10 @@ class RecoveryPasswordMail extends Mailable
         $this->to($email);
         $this->subject('Recuperação de senha');
 
+        $url = env('APP_URL_FRONTEND').'/password/reset/'.$token;
+
         return $this->markdown('mail.recoveryPassword', [
-            'token' => $token
+            'url' => $url
         ]);
     }
 }

@@ -1,13 +1,15 @@
 @component('mail::message')
-# Token para Recuperaçãp de Senha
+# Recuperação de Senha
 
-Cole o código abaixo no campo da página de recuperação.<br>
+Você solicitou a recuperação de senha de acesso ao MyNotes.<br>
+Clique no botão abaixo para cadastrar nova senha.<br>
 
-## Código:
-
-@component('mail::panel')
-    {{ $token }}
+@component('mail::button', ['url' => $url])
+    Recuperar minha senha
 @endcomponent
+
+Link:<br>
+{{ $url }}
 
 Thanks,<br>
 {{ config('app.name') }}
