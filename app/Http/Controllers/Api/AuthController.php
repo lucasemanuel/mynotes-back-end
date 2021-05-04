@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Jobs\RecoveryPassword as RecoveryPasswordJob;
 use App\Http\Requests\Auth\RecoveryRequest;
 use App\Http\Controllers\Controller;
-use App\Mail\RecoveryPasswordMail;
 use App\RecoveryPassword;
 use App\User;
 use Illuminate\Http\Request;
@@ -57,7 +57,8 @@ class AuthController extends Controller
             $recoveryPassword = new RecoveryPassword();
             $recoveryPassword->user_id = $user->id;
             $recoveryPassword->save();
-            Mail::send(new RecoveryPasswordMail($recoveryPassword));
+
+            RecoveryPasswordJob::dispatch($recoveryPassword)->delay(now()->addSeconds(10));
 
             DB::commit();
         } catch (\Exception $exception) {
