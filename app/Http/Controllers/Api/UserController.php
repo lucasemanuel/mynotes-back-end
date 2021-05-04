@@ -43,7 +43,6 @@ class UserController extends Controller
 
             DB::commit();
         } catch (\Exception $e) {
-            dd($e);
             DB::rollback();
             return response('Erro ao atualizar a senha!', 400);
         }
