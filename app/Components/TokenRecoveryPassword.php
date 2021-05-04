@@ -8,7 +8,7 @@ class TokenRecoveryPassword
 {
     public static function generate()
     {
-        return Faker::bothify('********');
+        return Faker::bothify(str_pad('', 48, '*'));
     }
 }
 

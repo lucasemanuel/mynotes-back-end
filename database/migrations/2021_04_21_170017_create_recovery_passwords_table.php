@@ -15,7 +15,7 @@ class CreateRecoveryPasswordsTable extends Migration
     {
         Schema::create('recovery_passwords', function (Blueprint $table) {
             $table->id();
-            $table->string('token', 8);
+            $table->string('token');
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->timestamps();
         });
