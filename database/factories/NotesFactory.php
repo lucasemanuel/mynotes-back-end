@@ -18,7 +18,7 @@ use Faker\Generator as Faker;
 
 $factory->define(Note::class, function (Faker $faker) {
     return [
-        'body' => $faker->paragraph,
+        'body' => $faker->paragraph(8),
         'is_favorite' => $faker->boolean()
     ];
 });
