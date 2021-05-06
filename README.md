@@ -1,31 +1,30 @@
-# <a name="logo" href="https://github.com/lucasemanuel/mynotes#-mynotes"><img src="https://raw.githubusercontent.com/lucasemanuel/mynotes-front-end/master/public/logo.svg" alt="logo mynotes" title="mynotes" height="60"/>myNotes</a> (Back-end)
+# MyNotes (Backend)
+> Sistema para gerenciar anotações, backend em [Laravel](https://laravel.com/).
 
-Aplicativo simples de anotações desenvolvido com laravel (back-end).
+## Guia de Instalação <a name = "install"></a>
 
-## Install <a name = "install"></a>
-
-Instalar Dependências
+Instalar Dependências:
 ```
 composer install
 ```
 
-Fazer cópia do arquivo `.env.example` e nomear de `.env`
+Fazer cópia do arquivo `.env.example` e nomear de `.env`:
 ```
 cp .env.example .env
 ```
 
-Gerar chave
+Gerar chave:
 ```
 php artisan key:generate
 ```
 
-Gerar secret do JWT
+Gerar hash do JWT:
 ```
 php artisan jwt:secret
 ```
 
-Configurar o banco de dados, crie previamente o banco para essa aplicação e set essas variáveis no arquivo `.evn`
-Recomendo usar mysql ou postgresql
+Configurar o banco de dados, crie previamente um banco para essa aplicação e preencha essas variáveis no arquivo `.env`
+Recomendo usar [MySQL](https://www.mysql.com/) ou [PostgresSQL](https://www.postgresql.org/):
 ```
 DB_CONNECTION=
 DB_HOST=
@@ -35,25 +34,38 @@ DB_USERNAME=
 DB_PASSWORD=
 ```
 
-Executar as migração
+Configure com a url da sua aplicação cliente, exemplo: `"http://localhost:8080"`:
+```
+APP_URL_FRONTEND=
+```
 
+Configurar as variáveis de email:
+```
+MAIL_MAILER=smtp
+MAIL_HOST=
+MAIL_PORT=
+MAIL_USERNAME=
+MAIL_PASSWORD=
+MAIL_ENCRYPTION=
+MAIL_FROM_ADDRESS=
+```
+
+Executar as migrações:
 ```
 php artisan migrate
 ```
 
-Executar os testes (usando sqlite)
-
+Executar os testes (usando sqlite):
 ```
 php artisan test
 ```
 
-Aplicar Tradução
-```
-php artisan vendor:publish --tag=laravel-pt-br-localization
-```
-
-Iniciar o servidor
-
+Iniciar o servidor:
 ```
 php artisan serve
+```
+
+Em outra instancia do terminal, use o comando abaixo para startar a fila:
+```
+php artisan queue:work
 ```
