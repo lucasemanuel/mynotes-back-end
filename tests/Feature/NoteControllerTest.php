@@ -40,7 +40,7 @@ class NoteControllerTest extends TestCase
 
         $response->assertOk();
         $response->assertJsonStructure(['total', 'per_page', 'data', 'current_page', 'last_page']);
-        $this->assertCount(32, $response['data']);
+        $this->assertCount(16, $response['data']);
     }
 
     /** @test */

@@ -18,7 +18,7 @@ class NoteController extends Controller
                 $query->where('body', 'like', "%{$body}%");
             })->when($request->favorite, function ($query, $favorite) {
                 $query->where('is_favorite', '=', (bool) $favorite);
-            })->orderByDesc('updated_at')->paginate(32);
+            })->orderByDesc('updated_at')->paginate(16);
 
         return response($notes);
     }
