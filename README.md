@@ -34,7 +34,7 @@ DB_USERNAME=
 DB_PASSWORD=
 ```
 
-Configure com a url da sua aplicação cliente, exemplo: `"http://localhost:8080"`:
+Configure com a url da sua aplicação cliente, exemplo: `http://localhost:8080`:
 ```
 APP_URL_FRONTEND=
 ```
@@ -48,6 +48,11 @@ MAIL_USERNAME=
 MAIL_PASSWORD=
 MAIL_ENCRYPTION=
 MAIL_FROM_ADDRESS=
+```
+
+Configure drive da fila para `database`
+```
+QUEUE_CONNECTION=database
 ```
 
 Executar as migrações:
