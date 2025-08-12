@@ -1,0 +1,44 @@
+name: Teste Unitários/Integração
+run-name: Pipeline de Testes - ${{ github.ref }}
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+    branches:
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-24.04
+    environment:
+      name: 'Teste Github Action'
+    env:
+      DB_CONNECTION: ${{ secrets.DB_CONNECTION }}
+      DB_DATABASE: ${{ secrets.DB_DATABASE }}
+
+    steps:
+      - name: Checkout no repositório
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.3'
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv
+          coverage: none
+
+      - name: Run composer install
+        run: composer install -n --prefer-dist
+
+      - name: Copy .env
+        run: cp .env.example .env
+
+      - name: Generate keys laravel
+        run: |
+          php artisan key:generate
+          php artisan jwt:secret
+
+      - name: Migrate database
+        run: php artisan migrate --force
+
+      - name: Run tests
+        run: php artisan test
