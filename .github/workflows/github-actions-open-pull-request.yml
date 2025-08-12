@@ -32,8 +32,10 @@ jobs:
       - name: Copy .env
         run: cp .env.example .env
 
-      - name: Generate key laravel
-        run: php artisan key:generate
+      - name: Generate keys laravel
+        run: |
+          php artisan key:generate
+          php artisan jwt:secret
 
       - name: Migrate database
         run: php artisan migrate --force
