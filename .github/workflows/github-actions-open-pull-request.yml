@@ -31,10 +31,12 @@ jobs:
 
       - name: Copy .env
         run: cp .env.example .env
-          php artisan migrate --force
 
       - name: Generate key laravel
         run: php artisan key:generate
+
+      - name: Migrate database
+        run: php artisan migrate --force
 
       - name: Run tests
         run: php artisan test
